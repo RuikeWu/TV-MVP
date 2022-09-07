@@ -1,12 +1,14 @@
-function [Ln,ifa]=  FWYZtest_step2(X,alpha1)
+% R is  p by T residual return matrix, p is dimension, T is sample size
+% alpha1 is required significance level, e.g. alpha1 = 0.05
+function [Ln,ifa]=  FWYZtest_step2(R,alpha1)
     tic;
-    [p,T]  = size(X);
+    [p,T]  = size(R);
     c=p/T;
     r1=10;
     r2=20;
     % divide sample
-    X1 = X(:,1:T/2);
-    X2 = X(:,T/2+1:T);
+    X1 = R(:,1:T/2);
+    X2 = R(:,T/2+1:T);
     % Calculate mean part
     eigenvecRnmean1=sort(eig((2/T).*X1*X1'));
     eigenvecRnmean2=sort(eig((2/T).*X2*X2'));

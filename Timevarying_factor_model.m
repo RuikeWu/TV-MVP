@@ -1,13 +1,13 @@
 % This function excute the local principal component method to simultaneously estimate 
 % time varying factor loading and corresponding factors. 
-% R is N X T matrix of excess return, N is dimension, T is sample size 
+% R is p X T matrix of excess return, p is dimension, T is sample size 
 % f-number is the number of factor
 % Kernel_set is pre-calculating kernel weighting matrix to improve the calculating speed
 % h is the bandwidth used for Kernel_set calculating
 function [Factor_loadings,Factor_set,X_r_cell,Fr_cell,h] = Timevarying_factor_model(R,f_number,Kernel_set,h)
 
     
-    [N,T] = size(R);
+    [p,T] = size(R);
     Factor_loadings = cell(T,1);
     Fr_cell = cell(T,1);
     X_r_cell = cell(T,1);
@@ -15,7 +15,7 @@ function [Factor_loadings,Factor_set,X_r_cell,Fr_cell,h] = Timevarying_factor_mo
     for  r = 1:T
         Kernel_r = Kernel_set(:,r);
         X_r = [];
-        for i = 1 :N
+        for i = 1 :p
             X_i_r = Kernel_r .* (R(i,:)');
             X_r = [X_r,X_i_r];
         end
@@ -85,7 +85,7 @@ function [Factor_loadings,Factor_set,X_r_cell,Fr_cell,h] = Timevarying_factor_mo
         F_t_hat_part1 = zeros(f_number,f_number);
         F_t_hat_part2 = zeros(f_number,1);
         factor_loading  = Factor_loadings{t};
-        for i = 1 :N
+        for i = 1 :p
             F_t_hat_part1 = F_t_hat_part1+ factor_loading(:,i)*factor_loading(:,i)';
             F_t_hat_part2 = F_t_hat_part2+ factor_loading(:,i)*R(i,t);
         end

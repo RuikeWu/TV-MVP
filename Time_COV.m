@@ -1,15 +1,15 @@
 % This code is used for estimating Time-varying covariance matrix proposed by us.
-% R is N*T return matrix, N is dimension, T is sample size, 
+% R is p*T return matrix, p is dimension, T is sample size, 
 % PCV is the sparse penalty coefficience for residual sparse matrix, 
 % f_number is the number of factor
 % tau is positive definite tunning parameter
 % h is bandwidth parameter, default is rule of thumb
 
-function [Sigma,RES_cov,Residuals] = Time_COV(R,PCV,f_number,tau,h)
-    N = size(R,1);
+function [Sigma_r,Sigma_e,Residuals] = Time_COV(R,PCV,f_number,tau,h)
+    p = size(R,1);
     T = size(R,2);
     if nargin == 4
-        h = (2.35/sqrt(12))*(T^-0.2)*(N^-0.1);
+        h = (2.35/sqrt(12))*(T^-0.2)*(p^-0.1);
     end
 	Kernel_set = zeros(T,T);
 	for  r = 1 :T
@@ -31,11 +31,11 @@ function [Sigma,RES_cov,Residuals] = Time_COV(R,PCV,f_number,tau,h)
     
     % save the residual, and perform the sparse estiamtor by using packages 'spcov' in R. 
     subdata = Residuals';
-    P = PCV*(ones(N) - eye(N));
+    P = PCV*(ones(p) - eye(p));
     tau = tau;
     save('Mat_R_temp.mat','subdata','P','tau');
     [s,e] = dos('Rspcov.bat'); 
-    RES_cov  = csvread('test.csv');
-    Sigma = Factor_loading_t'* (cov(Factor'))*Factor_loading_t + RES_cov; % our time-varying covariance matrix estimator
+    Sigma_e  = csvread('test.csv');
+    Sigma_r = Factor_loading_t'* (cov(Factor'))*Factor_loading_t + Sigma_e; % our time-varying covariance matrix estimator
     mu = Factor_loading_t'* mean(Factor')';
 end

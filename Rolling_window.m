@@ -1,5 +1,5 @@
 % This code achieve rolling window procedure in empirical analysis
-% Virtual_data is the input matrix # of stocks X sample size
+% Data_matrix is the input matrix, the number of stocks by sample size
 % history is the length of data you can get for history 
 % persist is the time you hold on, e.g. weekly 5,  monthly 21
 % P1 is tunning parameter for sparse residual covariance estimation
@@ -10,7 +10,7 @@
 % info: information set with Sharpe ratio, mean return and  standard deviation of propsoed strategy(loc 1,3,5) and '1/N'(loc 2,4,6)
 % PD_return: realized portfolio return of TV-MVP
 % eq_return: realized portfolio return of '1/N'
-function [info,PD_return,eq_return] = Rolling_window(Virtual_data,history,persist,cur_pos,end_pos)
+function [info,PD_return,eq_return] = Rolling_window(Data_matrix,history,persist,cur_pos,end_pos)
     
     tic;
     tau = 0.001;
@@ -28,7 +28,7 @@ function [info,PD_return,eq_return] = Rolling_window(Virtual_data,history,persis
     for i = cur_pos:persist:end_pos-persist
         W_set_temp = [];
         fprintf(' %d.',i);
-        subdata = Virtual_data(:,i-history:i-1);
+        subdata = Data_matrix(:,i-history:i-1);
         subsample_cov = cov(subdata');
         subdata = subdata';       
        if counth == 0
@@ -37,7 +37,7 @@ function [info,PD_return,eq_return] = Rolling_window(Virtual_data,history,persis
             % get residuals from the first step time-varying PCA
             [~,~,Residuals] =Time_COV(subdata',0,f_number,tau,h);
             % cross-validation for sparse parameter lambda
-            [PCV,~] = CV_for_spcov(Residuals,3,tau);
+            [PCV] = CV_for_spcov(Residuals,3,tau);
             % cross-validation for bandwidth
             [h] = CV_for_h(subdata',PCV,f_number,tau);
             h_set = [h_set;h];
@@ -65,13 +65,13 @@ function [info,PD_return,eq_return] = Rolling_window(Virtual_data,history,persis
         % to aviod look-ahead bias by dropping the missing data in advance
         ind_nan_set = [];
         for z = i :i+persist-1
-            ind_nan = find(isnan(Virtual_data(:,z)));
+            ind_nan = find(isnan(Data_matrix(:,z)));
             if ~isempty(ind_nan)
                 ind_nan_set = [ind_nan_set;ind_nan];
             end
             w_opt1(ind_nan) = 0;
             eq_w(ind_nan) = 0;
-            Holdingreturn = Virtual_data(:,z);
+            Holdingreturn = Data_matrix(:,z);
             Holdingreturn(ind_nan) = 0;
             PD_return = [PD_return;w_opt1'*Holdingreturn];
             eq_return = [eq_return;eq_w'*Holdingreturn];
@@ -80,7 +80,7 @@ function [info,PD_return,eq_return] = Rolling_window(Virtual_data,history,persis
         W_opt_set{W_count} = W_set_temp;
         W_count = W_count +1;
         ind_nan_set = unique(ind_nan_set);
-        Virtual_data(ind_nan_set,:)=[];
+        Data_matrix(ind_nan_set,:)=[];
         ind_nan_set = [];  %
     end
     fprintf('\n');

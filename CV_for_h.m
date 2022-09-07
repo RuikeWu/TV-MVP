@@ -1,12 +1,12 @@
-% R_history is the input data, dimension times sample size
+% R is the input return matrix, dimension times sample size
 % lam is sparse tuning parameter
 % K is the factor number
 % tau is positive definite tunning parameter
 % This code selects the value for bandwidth by using cross-validation method in appendix B.2
 
-function [h_cv,All_d] = CV_for_h(R_history,lam,K,tau)
+function [h_cv,All_d] = CV_for_h(R,lam,K,tau)
 
-    [P,T] = size(R_history);
+    [P,T] = size(R);
     N1 = ones(P,1);
     All_d = []; 
     h = [0.05:0.025:0.95];
@@ -20,14 +20,14 @@ function [h_cv,All_d] = CV_for_h(R_history,lam,K,tau)
     testing_set_cell = cell(test_loop,1);
     for kk = 1 : test_loop
         if p_T+0.1*(kk+1)> 1
-            testing_set_cell{kk} = R_history(:,floor(T*(p_T+0.1*(kk)))+1:floor(T));
+            testing_set_cell{kk} = R(:,floor(T*(p_T+0.1*(kk)))+1:floor(T));
         else
-            testing_set_cell{kk} = R_history(:,floor(T*(p_T+0.1*(kk)))+1:floor(T*(p_T+0.1*(kk+1))));
+            testing_set_cell{kk} = R(:,floor(T*(p_T+0.1*(kk)))+1:floor(T*(p_T+0.1*(kk+1))));
         end
     end
     training_set_cell = cell(test_loop,1);
     for kk = 1 : test_loop
-        training_set_cell{kk} = R_history(:,1:floor(T*(p_T+0.1*(kk))));
+        training_set_cell{kk} = R(:,1:floor(T*(p_T+0.1*(kk))));
     end
     SR_temp = [];
     for i =1:length(h)

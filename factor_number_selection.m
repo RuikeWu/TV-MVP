@@ -1,4 +1,4 @@
-% Input R ,N X T matrix
+% R is the input return matrix , N X T matrix, N is dimension, T is sample size
 % max_number is the maximum number of factor
 % This code use the BIC-type information criterion to select the number of factors in appendix B.3
 function [f_number,IC_R_set] = factor_number_selection(R,max_number)

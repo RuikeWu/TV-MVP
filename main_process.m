@@ -65,6 +65,7 @@ clear;clc;
 d = 50; T = 200; rho = 1;
 h = (2.35/sqrt(12))*T^(-0.2)*d^(-0.1);
 
+rng('default')
 rng(2);
 %generate virtual excess return data
 [Y,r_cov,s_cov]=data_generate(d,T,rho); 
