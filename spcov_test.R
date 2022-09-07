@@ -3,7 +3,7 @@
 library(spcov)
 library(PDSCE)
 library(R.matlab)
-loc_path2 = 'F:/matlab/matlab_true/bin/TV-MVP/'
+loc_path2 = 'F:/matlab/bin/TV-MVP/'
 Data <- readMat(paste(loc_path2,'Mat_R_temp.mat',sep = ""))
 S <- cov(Data$subdata)
 tau1 <- Data$tau[1]
