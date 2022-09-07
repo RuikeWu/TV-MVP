@@ -6,7 +6,7 @@ Before running provided code, some preliminary settings must be done to adapt to
 (1) Install CVX toolbox in MATLAB (the user needs first to download CVX toolbox named ``cvx.rar'', and then unzip the file, and run cvxsetup.m in MATLAB command window, more instructions of CVX toolbox can be referred to http://cvxr.com/cvx/)
 (2) Install packages 'spcov', 'PDSCE' and 'R.matlab' locally in R.
 (3) Open 'Rspcov.bat' in text form, edit the first path to the location of local "Rscript.exe", e.g. F:/R-3.6.1/bin/Rscript.exe, and the user need to replace F:/R-3.6.1/bin/ by their local path. Then, edit the second path to the location of 'TV-MVP' folder, e.g., F:/matlab/bin/TV-MVP/spcov_test.R, and the user needs to replace F:/matlab/bin/TV-MVP with their local path. We use 'bat' to run the code written by R and 'bat' file called by MATLAB.
-(4) Open '$spcov\_test.R$', edit the variable $loc\_path2$ to your local path, e.g. $F:/matlab/bin/TV-MVP/$
+(4) Open 'spcov\_test.R', edit the variable loc\_path2 in sixth row to your local path, e.g. F:/matlab/bin/TV-MVP/
 (5) Open MATLAB and change the working path to the current folder, e.g., F:/matlab/bin/TV-MVP/
 
 # Examples
